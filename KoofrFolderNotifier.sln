@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36915.13 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoofrFolderNotifier", "KoofrFolderNotifier.csproj", "{19D1C6D2-F67F-440B-A0CB-EA47C6842596}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{19D1C6D2-F67F-440B-A0CB-EA47C6842596}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19D1C6D2-F67F-440B-A0CB-EA47C6842596}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19D1C6D2-F67F-440B-A0CB-EA47C6842596}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19D1C6D2-F67F-440B-A0CB-EA47C6842596}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4B699B88-0C8A-43B2-8120-7F594F6E34EC}
+	EndGlobalSection
+EndGlobal
