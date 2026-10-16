@@ -37,6 +37,7 @@ CREATE TABLE FolderRecipients (
 CREATE TABLE ScannedFiles (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,
     file          TEXT NOT NULL,
+    path          TEXT NOT NULL,
     folder_id     INTEGER NOT NULL,
     first_seen_at TEXT NOT NULL DEFAULT (datetime('now')),
     is_active     INTEGER NOT NULL DEFAULT 1
@@ -45,7 +46,7 @@ CREATE TABLE ScannedFiles (
     FOREIGN KEY (folder_id)
         REFERENCES FolderStructure(id) ON DELETE CASCADE,
 
-    UNIQUE (folder_id, file)
+    UNIQUE (path)
 );
 
 -- Notification queue
@@ -58,7 +59,7 @@ CREATE TABLE NotificationQueue (
                           'Pending',
                           'Processing',
                           'Sent',
-                          'Failed'
+                          'Error'
                       )),
 
     attempts          INTEGER NOT NULL DEFAULT 0,

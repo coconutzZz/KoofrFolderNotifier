@@ -31,6 +31,7 @@
         public int FolderId { get; set; }
         public string FirstSeenAt { get; set; } = string.Empty;
         public bool IsActive { get; set; } = true;
+        public string Path { get;set; } = string.Empty;
     }
 
     public class NotificationQueueDto

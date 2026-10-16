@@ -1,5 +1,4 @@
-using Dapper;
-using Microsoft.Data.Sqlite;
+using KoofrFolderNotifier;
 using Microsoft.Extensions.Configuration;
 
 var environment = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ?? "Production";
@@ -13,10 +12,21 @@ var configuration = new ConfigurationBuilder()
 var connectionString = configuration.GetConnectionString("KoofrNotifier")
     ?? throw new InvalidOperationException("Connection string 'KoofrNotifier' is missing.");
 
-using var db = new SqliteConnection(connectionString);
-db.Open();
+var database = new Database(connectionString);
+var baseFolder = configuration["BaseFolder"];
+if (string.IsNullOrWhiteSpace(baseFolder))
+{
+    throw new InvalidOperationException("Setting 'BaseFolder' must be configured.");
+}
 
-// Enable foreign keys on this connection.
-db.Execute("PRAGMA foreign_keys = ON;");
+var scanner = new FileScanner(database, baseFolder);
+var queuedFiles = scanner.Scan();
 
-Console.WriteLine($"Connected to SQLite database: {db.DataSource}");
+Console.WriteLine($"Queued notifications for {queuedFiles} new document(s).");
+
+var recipientRepository = new RecipientRepository(database);
+var emailSender = new MockEmailSender();
+var notificationWorker = new NotificationWorker(database, recipientRepository, emailSender);
+var (sent, errors) = notificationWorker.ProcessPending();
+
+Console.WriteLine($"Processed notifications (mock email): {sent} sent, {errors} errors.");
