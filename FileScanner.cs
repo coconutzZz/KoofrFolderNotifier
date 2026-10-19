@@ -1,6 +1,7 @@
 using Dapper;
 using KoofrFolderNotifier.sql;
 using Microsoft.Data.Sqlite;
+using Serilog;
 
 namespace KoofrFolderNotifier
 {
@@ -47,7 +48,7 @@ namespace KoofrFolderNotifier
             {
                 if (!Directory.Exists(folder.Path))
                 {
-                    Console.Error.WriteLine($"Skipping missing folder: {folder.Path}");
+                    Log.Warning("Skipping missing folder: {FolderPath}", folder.Path);
                     continue;
                 }
 

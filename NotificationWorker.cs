@@ -1,5 +1,6 @@
 using Dapper;
 using KoofrFolderNotifier.sql;
+using Serilog;
 
 namespace KoofrFolderNotifier
 {
@@ -59,8 +60,10 @@ namespace KoofrFolderNotifier
                     var file = db.QuerySingle<ScannedFileDto>(
                         """
                         SELECT id, file, path, folder_id AS FolderId,
-                               first_seen_at AS FirstSeenAt, is_active AS IsActive
+                               first_seen_at AS FirstSeenAt, is_active AS IsActive,
+                               FolderStructure.name AS FolderName
                         FROM ScannedFiles
+                        INNER JOIN FolderStructure ON ScannedFiles.folder_id = FolderStructure.id
                         WHERE id = @ScannedFileId;
                         """,
                         new { notification.ScannedFileId });
@@ -112,7 +115,7 @@ namespace KoofrFolderNotifier
                         """,
                         new { notification.Id, ErrorMessage = exception.Message });
 
-                    Console.Error.WriteLine($"Notification {notification.Id} failed: {exception.Message}");
+                    Log.Error(exception, "Notification {NotificationId} failed.", notification.Id);
                     errors++;
                 }
             }

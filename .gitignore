@@ -1,6 +1,7 @@
 # Build-Ordner
 bin/
 obj/
+logs/
 
 # Visual Studio-Nutzdaten
 .vs/

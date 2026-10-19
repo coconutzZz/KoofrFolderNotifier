@@ -32,6 +32,7 @@
         public string FirstSeenAt { get; set; } = string.Empty;
         public bool IsActive { get; set; } = true;
         public string Path { get;set; } = string.Empty;
+        public string FolderName { get; set; } = string.Empty;
     }
 
     public class NotificationQueueDto
