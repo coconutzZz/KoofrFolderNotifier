@@ -28,7 +28,7 @@ namespace KoofrFolderNotifier
 
             using var db = _database.CreateConnection();
             var folders = db.Query<FolderStructureDto>(
-                "SELECT id, fullpath FROM FolderStructure WHERE is_active = 1;")
+                "SELECT id, name FROM FolderStructure WHERE is_active = 1;")
                 .Select(folder => new { folder.Id, Path = ResolveFolderPath(folder) })
                 // Give nested configured folders ownership of their own documents.
                 .OrderByDescending(folder => folder.Path.Length)
@@ -74,19 +74,25 @@ namespace KoofrFolderNotifier
 
         private string ResolveFolderPath(FolderStructureDto folder)
         {
-            if (string.IsNullOrWhiteSpace(folder.Fullpath))
+            if (string.IsNullOrWhiteSpace(folder.Name))
             {
-                throw new InvalidOperationException($"FolderStructure entry {folder.Id} has no path.");
+                throw new InvalidOperationException($"FolderStructure entry {folder.Id} has no name.");
             }
 
-            var folderPath = Path.GetFullPath(folder.Fullpath, _baseFolder);
+            if (Path.IsPathRooted(folder.Name))
+            {
+                throw new InvalidOperationException(
+                    $"FolderStructure entry {folder.Id} must have a name relative to BaseFolder: {folder.Name}");
+            }
+
+            var folderPath = Path.GetFullPath(Path.Combine(_baseFolder, folder.Name));
             var relativePath = Path.GetRelativePath(_baseFolder, folderPath);
             if (Path.IsPathRooted(relativePath)
                 || relativePath == ".."
                 || relativePath.StartsWith($"..{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
             {
                 throw new InvalidOperationException(
-                    $"FolderStructure entry {folder.Id} is outside BaseFolder: {folder.Fullpath}");
+                    $"FolderStructure entry {folder.Id} is outside BaseFolder: {folder.Name}");
             }
 
             return folderPath;
